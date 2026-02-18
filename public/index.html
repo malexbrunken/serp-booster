@@ -648,7 +648,66 @@
     </div>
   </div>
   
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    
+    // Error recommendations
+    const errorRecommendations = {
+      'PROXY_BLOCKED': 'Your proxy is being blocked. Try: (1) Upgrading to better residential proxies, (2) Switching to a different proxy provider',
+      'PROXY_TIMEOUT': 'Proxy is slow or not responding. Check: (1) Proxy provider status, (2) Your internet connection',
+      'PROXY_AUTH_FAILED': 'Proxy authentication failed. Check: (1) Username and password are correct, (2) Proxy subscription is active',
+      'SEARCH_CAPTCHA': 'Google detected automation. Try: (1) Using stealth mode, (2) Better proxies, (3) Slower typing speed',
+      'SEARCH_RATE_LIMIT': 'Too many requests. Try: (1) Increase delay between iterations, (2) Use more proxies',
+      'SEARCH_ERROR': 'Search engine error. Try: (1) Refreshing the page, (2) Checking your proxy'
+    };
+    
+    function displayErrors(prefix, stdout, stderr) {
+      const errorSection = document.getElementById(prefix + '-errors');
+      const errorList = document.getElementById(prefix + '-error-list');
+      const recommendation = document.getElementById(prefix + '-recommendation');
+      const successSection = document.getElementById(prefix + '-success');
+      const successText = document.getElementById(prefix + '-success-text');
+      
+      // Reset
+      errorSection.classList.remove('active');
+      successSection.classList.remove('active');
+      errorList.innerHTML = '';
+      recommendation.innerHTML = '';
+      
+      // Parse output for errors
+      const output = (stdout || '') + (stderr || '');
+      const errorCounts = {};
+      
+      // Count error types
+      Object.keys(errorRecommendations).forEach(err => {
+        const count = (output.match(new RegExp(err, 'g')) || []).length;
+        if (count > 0) {
+          errorCounts[err] = count;
+        }
+      });
+      
+      // Show errors or success
+      if (Object.keys(errorCounts).length > 0) {
+        errorSection.classList.add('active');
+        
+        Object.entries(errorCounts).forEach(([err, count]) => {
+          const li = document.createElement('li');
+          li.className = 'error-item';
+          li.innerHTML = '<span class="error-count">' + count + '</span><span>' + err + '</span>';
+          errorList.appendChild(li);
+        });
+        
+        // Add recommendation
+        const firstError = Object.keys(errorCounts)[0];
+        if (errorRecommendations[firstError]) {
+          recommendation.innerHTML = '<strong>Recommendation:</strong> ' + errorRecommendations[firstError];
+        }
+      } else {
+        successSection.classList.add('active');
+        successText.innerHTML = 'Campaign completed. Check the Results tab for details.';
+      }
+    }
+
+</script>
   <script>
     // Data stores
     let lists = { whitelist: [], greylist: [], blacklist: [] };
@@ -806,9 +865,11 @@
         
         const data = await res.json();
         log('Campaign complete!', 'console-info');
+        displayErrors('auto', data.stdout || '', data.stderr || '');
         progressFill.style.width = '100%';
         progressText.textContent = 'Complete';
         
+        displayErrors('auto', data.stdout, data.stderr);
         if (data.results) {
           log(`Total iterations: ${data.results.iterations?.length || 0}`);
           log(`Success rate: ${data.results.successRate || 0}%`);
@@ -860,6 +921,7 @@
         
         const data = await res.json();
         log('Campaign complete!', 'console-info');
+        displayErrors('auto', data.stdout || '', data.stderr || '');
         progressFill.style.width = '100%';
         progressText.textContent = 'Complete';
       } catch (e) {
@@ -885,6 +947,149 @@
     
     // Init
     loadData();
-  </script>
+  
+    
+    // Error recommendations
+    const errorRecommendations = {
+      'PROXY_BLOCKED': 'Your proxy is being blocked. Try: (1) Upgrading to better residential proxies, (2) Switching to a different proxy provider',
+      'PROXY_TIMEOUT': 'Proxy is slow or not responding. Check: (1) Proxy provider status, (2) Your internet connection',
+      'PROXY_AUTH_FAILED': 'Proxy authentication failed. Check: (1) Username and password are correct, (2) Proxy subscription is active',
+      'SEARCH_CAPTCHA': 'Google detected automation. Try: (1) Using stealth mode, (2) Better proxies, (3) Slower typing speed',
+      'SEARCH_RATE_LIMIT': 'Too many requests. Try: (1) Increase delay between iterations, (2) Use more proxies',
+      'SEARCH_ERROR': 'Search engine error. Try: (1) Refreshing the page, (2) Checking your proxy'
+    };
+    
+    function displayErrors(prefix, stdout, stderr) {
+      const errorSection = document.getElementById(prefix + '-errors');
+      const errorList = document.getElementById(prefix + '-error-list');
+      const recommendation = document.getElementById(prefix + '-recommendation');
+      const successSection = document.getElementById(prefix + '-success');
+      const successText = document.getElementById(prefix + '-success-text');
+      
+      // Reset
+      errorSection.classList.remove('active');
+      successSection.classList.remove('active');
+      errorList.innerHTML = '';
+      recommendation.innerHTML = '';
+      
+      // Parse output for errors
+      const output = (stdout || '') + (stderr || '');
+      const errorCounts = {};
+      
+      // Count error types
+      Object.keys(errorRecommendations).forEach(err => {
+        const count = (output.match(new RegExp(err, 'g')) || []).length;
+        if (count > 0) {
+          errorCounts[err] = count;
+        }
+      });
+      
+      // Show errors or success
+      if (Object.keys(errorCounts).length > 0) {
+        errorSection.classList.add('active');
+        
+        Object.entries(errorCounts).forEach(([err, count]) => {
+          const li = document.createElement('li');
+          li.className = 'error-item';
+          li.innerHTML = '<span class="error-count">' + count + '</span><span>' + err + '</span>';
+          errorList.appendChild(li);
+        });
+        
+        // Add recommendation
+        const firstError = Object.keys(errorCounts)[0];
+        if (errorRecommendations[firstError]) {
+          recommendation.innerHTML = '<strong>Recommendation:</strong> ' + errorRecommendations[firstError];
+        }
+      } else {
+        successSection.classList.add('active');
+        successText.innerHTML = 'Campaign completed. Check the Results tab for details.';
+      }
+    }
+
+</script>
 </body>
 </html>
+
+<style>
+/* Error display */
+.error-section {
+  display: none;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.error-section.active { display: block; }
+
+.error-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.error-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--danger);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.error-title {
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.error-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.error-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: white;
+  border-radius: var(--radius);
+}
+
+.error-count {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.error-recommendation {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #fffbeb;
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: #92400e;
+}
+
+/* Success display */
+.success-section {
+  display: none;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.success-section.active { display: block; }
+</style>
