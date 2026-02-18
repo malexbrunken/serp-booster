@@ -1,0 +1,11 @@
+# SERP Clicks keywords
+# Format: keyword|target_url|tier
+# Tier: whitelist (click), greylist (maybe), blacklist (never click)
+
+reputation management|https://example.com|whitelist
+best seo services|https://example.com/services|whitelist
+site:wikipedia.org exampleclient|https://en.wikipedia.org/wiki/ExampleClient|greylist
+
+# These are sites we want to outrank - never click
+exampleclient scam|https://bad-review-site.com|blacklist
+exampleclient fraud|https://complaint-site.com|blacklist
