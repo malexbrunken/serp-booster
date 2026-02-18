@@ -2,7 +2,7 @@
 
 ## Overview
 
-Google/Bing Autocomplete module for SERP Booster. Focused on US market, drip campaign approach, with robust error reporting.
+Google, Bing, DuckDuckGo, Yahoo Autocomplete module for SERP Booster. Focused on US market, drip campaign approach, with robust error reporting.
 
 ---
 
@@ -23,7 +23,7 @@ Format: `prefix|suggestion` (CSV)
 
 | Field | Type | Default | Notes |
 |-------|------|---------|-------|
-| Search Engine | dropdown | Google | Options: Google, Bing |
+| Search Engine | dropdown | Google | Options: Google, Bing, DuckDuckGo, Yahoo |
 | Google Domain | dropdown | google.com | For Google only |
 | Language | dropdown | en-US | US only for now |
 | Repetitions | number | 100 | Total per term |

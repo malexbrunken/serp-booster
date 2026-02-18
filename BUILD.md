@@ -39,8 +39,8 @@
 #### Bing Support
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Add to autocomplete | 🔲 To Build | Search engine dropdown |
-| Add to SERP booster | 🔲 To Build | Google + Bing options |
+| Add to autocomplete (done) | 🔲 To Build | Search engine dropdown |
+| Add to autocomplete (done), Bing to SERP booster | 🔲 To Build | Google, Bing, DuckDuckGo, Yahoo |
 
 ### Dashboard (Web UI)
 
