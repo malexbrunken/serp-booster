@@ -43,6 +43,14 @@ class SerpClicksEngine {
     };
     
     this.strategy = this.strategies[this.options.mode] || this.strategies.natural;
+    
+    // Typing speeds
+    this.typingSpeeds = {
+      slow: 150,
+      medium: 80,
+      fast: 40,
+      random: () => 40 + Math.random() * 120
+    };
   }
   
   async getPosition(keyword, targetUrl) {

@@ -21,6 +21,7 @@ program
   .option('-k, --keywords <file>', 'Keywords CSV file (format: keyword|target_url|tier)')
   .option('-e, --engine <engine>', 'Search engine (google, bing, duckduckgo, yahoo)', 'google')
   .option('-m, --mode <mode>', 'Strategy mode (aggressive, natural, stealth)', 'natural')
+  .option('-t, --typing <mode>', 'Typing speed (slow, medium, fast, random)', 'random')
   .option('-d, --dwell <seconds>', 'Dwell time on clicked page', '30')
   .option('-s, --sessions <n>', 'Number of sessions per keyword', '1')
   .option('-p, --proxies <file>', 'Proxy list file')
@@ -86,9 +87,11 @@ async function main() {
   await browser.launch();
   
   const engine = new SerpClicksEngine(browser, {
+    typingMode: opts.typing,
     engine: opts.engine,
     mode: opts.mode,
     dwell: parseInt(opts.dwell),
+    typingMode: opts.typing || 'random',
     sessions: parseInt(opts.sessions),
     outputDir: opts.output
   });

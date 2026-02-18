@@ -128,3 +128,11 @@ node src/cli.js --keywords keywords.csv
 - Local without proxy (limited)
 - With residential proxy (full test)
 - Drip campaign simulation
+
+---
+
+## Future Enhancements
+
+### Phase 2 Anti-Detection
+- [ ] Cookie clearing between iterations
+- [ ] Fresh browser context per session

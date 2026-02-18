@@ -287,3 +287,21 @@ New "Insights" tab showing:
 - Current campaign health score
 - Recent recommendations
 - Action buttons ("Apply fix", "Dismiss")
+
+---
+
+## Phase 2 Enhancements (Future)
+
+### Advanced Anti-Detection
+
+These features were considered but not implemented in Phase 1:
+
+| Feature | Description | Complexity |
+|---------|-------------|------------|
+| Cookie Clearing | Clear cookies between iterations | Medium |
+| Fresh Browser | New browser context per session | Hard |
+
+### Notes
+- Current anti-detection (UA rotation, viewport, mouse movement, random delays) is solid for most use cases
+- Cookie/fresh browser add marginal value but significant complexity
+- Consider adding if detection becomes an issue
