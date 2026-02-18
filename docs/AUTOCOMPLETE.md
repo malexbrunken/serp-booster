@@ -248,3 +248,42 @@ START CAMPAIGN
 - Mobile user agents
 - Browser extension option
 - Cloud deployment
+
+---
+
+## 10. Intelligence Layer (Phase 2)
+
+### Overview
+
+The Intelligence Layer analyzes campaign data to provide insights and recommendations.
+
+### Data Sources
+
+| Source | What It Contains |
+|--------|------------------|
+| History Logs | Iterations, success/failure, timing |
+| Error Logs | Error types, frequencies, patterns |
+| Position Data | Ranking changes over time |
+| Campaign Settings | Current configuration |
+
+### Features
+
+#### Error Analysis
+- Detect error patterns (e.g., "5 PROXY_BLOCKED in last hour")
+- Suggest fixes (e.g., "Proxy quality low - consider upgrading")
+
+#### Performance Insights
+- Success rate trends
+- Optimal settings recommendations
+- Plateau detection (e.g., "No progress in 3 days")
+
+#### Weekly Summary
+- Auto-generated report of campaign progress
+- Recommendations for next week
+
+### Dashboard Integration
+
+New "Insights" tab showing:
+- Current campaign health score
+- Recent recommendations
+- Action buttons ("Apply fix", "Dismiss")
