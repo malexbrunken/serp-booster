@@ -248,6 +248,42 @@ class BrowserManager {
       await this.browser.close();
     }
   }
+  
+  // Additional methods for autocomplete
+  async gotoSearchEngine(engine = 'google') {
+    const baseUrl = engine === 'bing' ? 'https://www.bing.com' : 'https://www.google.com';
+    
+    try {
+      await this.page.goto(baseUrl, { 
+        waitUntil: 'domcontentloaded', 
+        timeout: 15000 
+      });
+      
+      // Random delay after load
+      await this.randomDelay(1000, 3000);
+      
+      return true;
+    } catch (e) {
+      console.log(`  Navigation error: ${e.message}`);
+      return false;
+    }
+  }
+  
+  getProxyConfig() {
+    // Priority: explicit config > random from file
+    if (this.options.proxyHost) {
+      return {
+        server: `${this.options.proxyHost}:${this.options.proxyPort}`,
+        username: this.options.proxyUser,
+        password: this.options.proxyPass
+      };
+    }
+    
+    const proxy = this.getRandomProxy();
+    if (proxy) {
+      return { server: proxy };
+    }
+    
+    return null;
+  }
 }
-
-module.exports = { BrowserManager };
