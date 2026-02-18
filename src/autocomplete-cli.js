@@ -19,7 +19,7 @@ program
 
 program
   .option('-t, --terms <file>', 'Terms CSV file (format: prefix|suggestion)')
-  .option('-e, --engine <engine>', 'Search engine (google, bing, duckduckgo)', 'google')
+  .option('-e, --engine <engine>', 'Search engine (google, bing, duckduckgo, yahoo)', 'google')
   .option('-m, --mode <mode>', 'Typing mode (slow, medium, fast, random)', 'random')
   .option('-r, --repetitions <n>', 'Repetitions per term', '10')
   .option('-d, --delay <seconds>', 'Delay between iterations', '30')

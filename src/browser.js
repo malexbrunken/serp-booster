@@ -194,7 +194,10 @@ class BrowserManager {
   
   async typeAndWait(prefix, term, engine = 'google') {
     // Go to search engine
-    const baseUrl = engine === 'duckduckgo' ? 'https://duckduckgo.com' : (engine === 'bing' ? 'https://www.bing.com' : 'https://www.google.com');
+    let baseUrl = 'https://www.google.com';
+    if (engine === 'yahoo') baseUrl = 'https://search.yahoo.com';
+    else if (engine === 'duckduckgo') baseUrl = 'https://duckduckgo.com';
+    else if (engine === 'bing') baseUrl = 'https://www.bing.com';
     await this.page.goto(baseUrl, { waitUntil: 'networkidle' });
     
     // Find search box
@@ -251,7 +254,10 @@ class BrowserManager {
   
   // Additional methods for autocomplete
   async gotoSearchEngine(engine = 'google') {
-    const baseUrl = engine === 'duckduckgo' ? 'https://duckduckgo.com' : (engine === 'bing' ? 'https://www.bing.com' : 'https://www.google.com');
+    let baseUrl = 'https://www.google.com';
+    if (engine === 'yahoo') baseUrl = 'https://search.yahoo.com';
+    else if (engine === 'duckduckgo') baseUrl = 'https://duckduckgo.com';
+    else if (engine === 'bing') baseUrl = 'https://www.bing.com';
     
     try {
       await this.page.goto(baseUrl, { 
