@@ -1,0 +1,28 @@
+{
+  "name": "serp-booster",
+  "version": "1.0.0",
+  "description": "SERP Booster - Strategic search ranking tool with web dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "booster": "node src/cli.js"
+  },
+  "keywords": [
+    "seo",
+    "serp",
+    "ranking",
+    "reputation",
+    "automation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.13.5",
+    "body-parser": "^1.20.2",
+    "commander": "^11.1.0",
+    "cors": "^2.8.5",
+    "csv-parse": "^5.6.0",
+    "express": "^4.22.1",
+    "playwright": "^1.58.2"
+  }
+}
