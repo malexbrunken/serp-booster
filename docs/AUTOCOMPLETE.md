@@ -2,7 +2,7 @@
 
 ## Overview
 
-Google Autocomplete module for SERP Booster. Focused on US market, drip campaign approach, with robust error reporting.
+Google/Bing Autocomplete module for SERP Booster. Focused on US market, drip campaign approach, with robust error reporting.
 
 ---
 
@@ -23,7 +23,8 @@ Format: `prefix|suggestion` (CSV)
 
 | Field | Type | Default | Notes |
 |-------|------|---------|-------|
-| Google Domain | dropdown | google.com | US only for now |
+| Search Engine | dropdown | Google | Options: Google, Bing |
+| Google Domain | dropdown | google.com | For Google only |
 | Language | dropdown | en-US | US only for now |
 | Repetitions | number | 100 | Total per term |
 | Searches Per Batch | number | 5 | Process in batches |
@@ -115,11 +116,11 @@ Format: `prefix|suggestion` (CSV)
 |-------|-------|--------|
 | PROXY_AUTH_FAILED | Invalid credentials | Stop, alert user |
 | PROXY_TIMEOUT | Proxy slow/unreachable | Rotate IP, retry |
-| PROXY_BLOCKED | Google blocked this IP | Rotate IP, log, continue |
+| PROXY_BLOCKED | Search engine blocked this IP | Rotate IP, log, continue |
 | PROXY_CONN_REFUSED | Proxy not responding | Rotate IP, retry |
-| GOOGLE_CAPTCHA | Google detected automation | Pause, alert user |
-| GOOGLE_RATE_LIMIT | Too many requests | Slow down, wait |
-| GOOGLE_ERROR | Google error message | Log error, continue |
+| SEARCH_CAPTCHA | Search engine detected automation | Pause, alert user |
+| SEARCH_RATE_LIMIT | Too many requests | Slow down, wait |
+| SEARCH_ERROR | Search engine error message | Log error, continue |
 | SUCCESS | Completed iteration | Log, continue |
 
 ### Error Response to Dashboard
@@ -130,8 +131,9 @@ Format: `prefix|suggestion` (CSV)
   "term": "johndoe",
   "status": "error",
   "errorType": "PROXY_BLOCKED",
-  "errorMessage": "Google blocked this IP - 403 Forbidden",
+  "errorMessage": "Search engine blocked this IP - 403 Forbidden",
   "timestamp": "2026-02-18T14:30:22Z",
+  "searchEngine": "Google",
   "proxy": "123.45.67.89",
   "suggestionAppeared": false,
   "suggestionsShown": [],
@@ -146,7 +148,7 @@ Format: `prefix|suggestion` (CSV)
 | Error count | Total errors this run |
 | Current status | Running/Paused/Error |
 | Last error | Most recent error message |
-| Error breakdown | Count by type (proxy vs Google) |
+| Error breakdown | Count by type (proxy vs search engine) |
 | Recommendations | "Try different proxy provider" if >5 proxy errors |
 
 ### Error Recommendations
@@ -154,7 +156,7 @@ Format: `prefix|suggestion` (CSV)
 | If Error Pattern | Show Recommendation |
 |-----------------|---------------------|
 | >3 PROXY_BLOCKED | "Proxy quality low. Consider upgrading residential proxy." |
-| >3 GOOGLE_CAPTCHA | "Detection likely. Slow down or use better proxies." |
+| >3 SEARCH_CAPTCHA | "Detection likely. Slow down or use better proxies." |
 | >3 PROXY_TIMEOUT | "Proxy slow. Check proxy provider or rotate more." |
 | AUTH_FAILED | "Check proxy credentials." |
 
@@ -175,7 +177,7 @@ START CAMPAIGN
        │    │
        │    ├─► Load/verify proxy
        │    │
-       │    ├─► Navigate to google.com
+       │    ├─► Navigate to search engine
        │    │
        │    ├─► Type prefix (with typing speed)
        │    │
@@ -208,6 +210,7 @@ START CAMPAIGN
   "term": "johndoe",
   "suggestion": "john doe verified",
   "iteration": 47,
+  "searchEngine": "Google",
   "googleDomain": "google.com",
   "proxy": "123.45.67.89",
   "typingSpeed": 85,
@@ -241,7 +244,7 @@ START CAMPAIGN
 
 ## 9. Future Considerations (Not Now)
 
-- Multiple Google domains (.co.uk, .de, etc.)
+- Multiple search domains (.co.uk, .de, etc.)
 - Mobile user agents
 - Browser extension option
 - Cloud deployment
