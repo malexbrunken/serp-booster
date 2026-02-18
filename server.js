@@ -182,3 +182,106 @@ function parseResults(stdout) {
 app.listen(PORT, () => {
   console.log(`SERP Booster Dashboard running at http://localhost:${PORT}`);
 });
+
+// Run Autocomplete Campaign
+app.post('/api/run-autocomplete', async (req, res) => {
+  const autocomplete = JSON.parse(fs.readFileSync(AUTOCOMPLETE_FILE, 'utf-8'));
+  
+  // Build autocomplete CSV
+  const lines = autocomplete.terms.map(t => `${t.prefix}|${t.term}`);
+  
+  if (lines.length === 0) {
+    return res.json({ error: 'No terms defined' });
+  }
+  
+  // Write temp file
+  const termsPath = path.join(DATA_DIR, 'temp_auto_terms.csv');
+  fs.writeFileSync(termsPath, lines.join('\n'));
+  
+  // Build command
+  let cmd = `node src/autocomplete-cli.js --terms ${termsPath}`;
+  cmd += ` --engine ${req.body.engine || 'google'}`;
+  cmd += ` --typing ${req.body.typing || 'random'}`;
+  cmd += ` --repetitions ${req.body.repetitions || 10}`;
+  cmd += ` --delay ${req.body.delay || 30}`;
+  
+  if (req.body.proxyHost) {
+    cmd += ` --proxy-host ${req.body.proxyHost}`;
+    cmd += ` --proxy-port ${req.body.proxyPort || ''}`;
+    cmd += ` --proxy-user ${req.body.proxyUser || ''}`;
+    cmd += ` --proxy-pass ${req.body.proxyPass || ''}`;
+  }
+  
+  console.log('Running:', cmd);
+  
+  exec(cmd, { cwd: __dirname }, (error, stdout, stderr) => {
+    // Cleanup
+    try { fs.unlinkSync(termsPath); } catch (e) {}
+    
+    // Save to history
+    const history = JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf-8'));
+    history.push({
+      date: new Date().toISOString(),
+      type: 'autocomplete',
+      engine: req.body.engine,
+      results: { stdout: stdout.substring(0, 1000) }
+    });
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+    
+    res.json({ success: true, stdout: stdout.substring(0, 2000), stderr: stderr.substring(0, 500) });
+  });
+});
+
+// Run SERP Clicks Campaign
+app.post('/api/run-serp', async (req, res) => {
+  const lists = JSON.parse(fs.readFileSync(LISTS_FILE, 'utf-8'));
+  
+  // Build keywords CSV
+  const keywords = [];
+  ['whitelist', 'greylist', 'blacklist'].forEach(tier => {
+    lists[tier].forEach(item => {
+      keywords.push(`${item.keyword}|${item.url}|${tier}`);
+    });
+  });
+  
+  if (keywords.length === 0) {
+    return res.json({ error: 'No keywords defined' });
+  }
+  
+  // Write temp file
+  const keywordsPath = path.join(DATA_DIR, 'temp_serp_keywords.csv');
+  fs.writeFileSync(keywordsPath, keywords.join('\n'));
+  
+  // Build command
+  let cmd = `node src/serp-clicks-cli.js --keywords ${keywordsPath}`;
+  cmd += ` --engine ${req.body.engine || 'google'}`;
+  cmd += ` --mode ${req.body.mode || 'natural'}`;
+  cmd += ` --dwell ${req.body.dwell || 30}`;
+  cmd += ` --sessions ${req.body.sessions || 1}`;
+  
+  if (req.body.proxyHost) {
+    cmd += ` --proxy-host ${req.body.proxyHost}`;
+    cmd += ` --proxy-port ${req.body.proxyPort || ''}`;
+    cmd += ` --proxy-user ${req.body.proxyUser || ''}`;
+    cmd += ` --proxy-pass ${req.body.proxyPass || ''}`;
+  }
+  
+  console.log('Running:', cmd);
+  
+  exec(cmd, { cwd: __dirname }, (error, stdout, stderr) => {
+    // Cleanup
+    try { fs.unlinkSync(keywordsPath); } catch (e) {}
+    
+    // Save to history
+    const history = JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf-8'));
+    history.push({
+      date: new Date().toISOString(),
+      type: 'serp',
+      engine: req.body.engine,
+      results: { stdout: stdout.substring(0, 1000) }
+    });
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+    
+    res.json({ success: true, stdout: stdout.substring(0, 2000), stderr: stderr.substring(0, 500) });
+  });
+});
