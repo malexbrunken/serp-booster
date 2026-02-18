@@ -140,7 +140,7 @@ class AutocompleteEngine {
   async getSearchBox() {
     const engine = this.options.engine;
     
-    if (engine === 'bing') {
+    if (engine === 'bing' || engine === 'duckduckgo') {
       // Bing search box selectors
       return await this.browser.page.$('#sb_form_q') ||
              await this.browser.page.$('input[name="q"]') ||
@@ -165,7 +165,7 @@ class AutocompleteEngine {
     const engine = this.options.engine;
     
     try {
-      if (engine === 'bing') {
+      if (engine === 'bing' || engine === 'duckduckgo') {
         // Bing suggestions - multiple selectors
         let bingSuggestions = await this.browser.page.$$('.sa_bgbg li, #sa_ul li, .b_symans li, [class*="sa_"] li');
         
@@ -199,7 +199,7 @@ class AutocompleteEngine {
     try {
       let suggestionEls = [];
       
-      if (engine === 'bing') {
+      if (engine === 'bing' || engine === 'duckduckgo') {
         suggestionEls = await this.browser.page.$$('.sa_bgbg li, #sa_ul li, .b_symans li');
       } else {
         // Google (default)
