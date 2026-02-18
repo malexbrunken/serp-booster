@@ -45,6 +45,16 @@ Format: `prefix|suggestion` (CSV)
 | After Suggestion | dropdown | Click | Options: Click suggestion, Press Enter, Do nothing |
 | Dwell Time | number | 2 | Seconds to wait after typing before action |
 | Random Delays | checkbox | true | Add 2-10s random variation |
+| Visit Result | toggle | OFF | 🔒 Coming soon - Navigate to result page after clicking suggestion |
+
+### Visit Result Settings (Coming Soon)
+
+| Field | Type | Notes |
+|-------|------|-------|
+| Visit Duration | number | Seconds to stay on result page |
+| Scroll Pages | checkbox | Scroll through the page? |
+| Click Links | checkbox | Click any links on the page? |
+| Bounce Back | checkbox | Return to Google after X seconds? |
 
 ---
 
